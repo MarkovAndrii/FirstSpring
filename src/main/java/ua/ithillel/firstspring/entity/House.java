@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @AllArgsConstructor
 @ToString
-@Component
 public class House {
     private String address;
     private Integer numberOfFloors;
