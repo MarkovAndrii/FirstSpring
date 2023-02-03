@@ -47,8 +47,8 @@ public class FirstSpringApplication {
 //        System.out.println(port);
 
         //task4 - create Beans(Component -> Controller -> Service -> Repository)
-        CarBuilder carBuilder = run.getBean(CarBuilder.class);
-        List<Car> allCars = carBuilder.getAll();
-        allCars.forEach(System.out::println);
+//        CarBuilder carBuilder = run.getBean(CarBuilder.class);
+//        List<Car> allCars = carBuilder.getAll();
+//        allCars.forEach(System.out::println);
     }
 }

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @ToString
 @AllArgsConstructor
-@Component
 public class Car {
 
     private String brand;
