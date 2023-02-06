@@ -1,68 +1,21 @@
 package ua.ithillel.firstspring.repository;
 
-import jakarta.annotation.PostConstruct;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 import ua.ithillel.firstspring.entity.User;
 
-import java.util.ArrayList;
-import java.util.List;
+public interface UserRepository extends JpaRepository<User, Integer> {
+    @Transactional
+    @Modifying
+    @Query("update User u set u.name = ?1 where u.id = ?2")
+    Integer updateNameById(String name, Integer id);
 
-@Repository
-public class UserRepository {
+    User getUserByEmailAndPhone(String email, Long phone);
 
-    private final List<User> users = new ArrayList<>();
+    @Query("select u.email from User u where u.id =?1")
+    String getEmailById(Integer userId);
 
-    @PostConstruct
-    public void init() {
-        users.add(new User(0, "Antony", "Stone", 35, "ant@gmail.com", 114545789055L));
-        users.add(new User(1, "Kate", "West", 35, "kate@mail.uk", 123777789168L));
-        users.add(new User(2, "John", "Webb", 27, "j007@yahoo.com", 144885554733L));
-    }
-
-    public List<User> getAll() {
-        return users;
-    }
-
-    public User geById(Integer id) {
-        return users.get(id);
-    }
-
-    public User getByEmailAndPhone(String email, Long phone) {
-        for (User user : users) {
-            if (user.getEmail().equals(email) & user.getPhone().equals(phone)) {
-                return user;
-            }
-        }
-        return null;
-    }
-
-    public User getByFilter(String name, String surname, String email) {
-        for (User user : users) {
-            if (user.getName().equals(name) || user.getSurname().equals(surname) || user.getEmail().equals(email)) {
-                return user;
-            }
-        }
-        return null;
-    }
-
-    public User save(User user) {
-        users.add(user);
-        user.setId(users.size()-1);
-        return user;
-    }
-
-    public User update(Integer id, User user) {
-        User changeUser = users.get(id);
-        changeUser.setName(user.getName());
-        changeUser.setSurname(user.getSurname());
-        changeUser.setAge(user.getAge());
-        changeUser.setEmail(user.getEmail());
-        changeUser.setPhone(user.getPhone());
-        return users.get(id);
-    }
-
-    public Integer delete(int id) {
-        users.remove(id);
-        return id;
-    }
+    User getUserByNameOrSurnameOrEmail(String name, String surname, String email);
 }
