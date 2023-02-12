@@ -1,14 +1,19 @@
 package ua.ithillel.firstspring.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ua.ithillel.firstspring.entity.User;
 import ua.ithillel.firstspring.repository.UserRepository;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
+    //    private final OldUserRepository userRepository;
     private final UserRepository userRepository;
 
     @Autowired
@@ -17,30 +22,47 @@ public class UserService {
     }
 
     public List<User> getAll() {
-        return userRepository.getAll();
+        return userRepository.findAll();
     }
 
-    public User geById(Integer id) {
-        return userRepository.geById(id);
+    public User geById(Integer id) {    //version_1
+        return userRepository.findById(id).orElseThrow();  //method return Optional
+    }
+
+//    public Optional<User> geOptionalById(Integer id) {    //version_2
+//        return  userRepository.findById(id);
+//    }
+
+    public String getEmailById(Integer userId) {
+        return userRepository.getEmailById(userId);
     }
 
     public User getByEmailAndPhone(String email, Long phone) {
-        return userRepository.getByEmailAndPhone(email, phone);
+        return userRepository.getUserByEmailAndPhone(email, phone);
     }
 
-    public User getByFilter(String name, String surname, String email) {
-        return userRepository.getByFilter(name, surname, email);
+    public User getUserByNameOrSurnameOrEmail(String name, String surname, String email) {
+        return userRepository.getUserByNameOrSurnameOrEmail(name, surname, email);
     }
 
     public User save(User user) {
         return userRepository.save(user);
     }
 
-    public User update(Integer id, User user) {
-        return userRepository.update(id, user);
+    public User update(User user) {
+        return userRepository.save(user);
+    }
+
+    public Integer updateNameById(String name, Integer id) {
+        if (!userRepository.existsById(id)) {
+            return null;
+        }
+        userRepository.updateNameById(name, id);
+        return id;
     }
 
     public Integer delete(Integer id) {
-        return userRepository.delete(id);
+        userRepository.deleteById(id);
+        return id;
     }
 }
