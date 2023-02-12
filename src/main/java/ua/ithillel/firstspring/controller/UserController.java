@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import ua.ithillel.firstspring.controller.dto.IntegerDto;
 import ua.ithillel.firstspring.controller.dto.StringDto;
 import ua.ithillel.firstspring.controller.dto.UserDto;
+import ua.ithillel.firstspring.controller.dto.UserUpdateResult;
 import ua.ithillel.firstspring.controller.mapper.UserMapper;
 import ua.ithillel.firstspring.repository.UserRepository;
 import ua.ithillel.firstspring.service.UserService;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +26,8 @@ public class UserController {
     private final UserRepository userRepository;
 
     @Autowired
-    public UserController(UserService userService, UserMapper userMapper,
+    public UserController(UserService userService,
+                          UserMapper userMapper,
                           UserRepository userRepository) {
         this.userService = userService;
         this.userMapper = userMapper;
@@ -116,14 +119,16 @@ public class UserController {
 
     //example query - PUT: http://localhost:8080/users/3/Mick
     @PutMapping("/{id}/{name}")
-    public ResponseEntity<IntegerDto> updateNameById(
+    public ResponseEntity<UserUpdateResult> updateNameById(
             @PathVariable Integer id,
             @PathVariable String name
     ) {
-        if (userRepository.existsById(id)) {
-            return ResponseEntity.ok(new IntegerDto(userService.updateNameById(name, id)));
+        Integer updatedUserId = userService.updateNameById(name, id);
+        if (updatedUserId == null) {
+            return ResponseEntity.badRequest().body(new UserUpdateResult(
+                    String.format("Id %d didn't find, please input another Id", id)));
         }
-        return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.accepted().body(new UserUpdateResult(updatedUserId));
     }
 
 

@@ -1,11 +1,15 @@
 package ua.ithillel.firstspring.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ua.ithillel.firstspring.entity.User;
 import ua.ithillel.firstspring.repository.UserRepository;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -50,7 +54,11 @@ public class UserService {
     }
 
     public Integer updateNameById(String name, Integer id) {
-        return userRepository.updateNameById(name, id);
+        if (!userRepository.existsById(id)) {
+            return null;
+        }
+        userRepository.updateNameById(name, id);
+        return id;
     }
 
     public Integer delete(Integer id) {
