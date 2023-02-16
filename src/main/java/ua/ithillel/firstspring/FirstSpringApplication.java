@@ -2,6 +2,7 @@ package ua.ithillel.firstspring;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ua.ithillel.firstspring.configuration.BeanConfiguration;
@@ -13,7 +14,7 @@ import ua.ithillel.firstspring.service.HouseService;
 
 import java.util.List;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class FirstSpringApplication {
 
     public static void main(String[] args) {
